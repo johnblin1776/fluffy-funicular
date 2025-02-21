@@ -6,6 +6,7 @@ const players = [
     { rack: [], score: 0, placedTiles: [] }
 ];
 let currentPlayer = 0;
+let dictionary = []; // Will be populated from external file
 
 // Letter values (Scrabble scoring)
 const letterValues = {
@@ -14,8 +15,19 @@ const letterValues = {
     'U': 1, 'V': 4, 'W': 4, 'X': 8, 'Y': 4, 'Z': 10
 };
 
-// Simple word list for validation (expandable)
-const dictionary = ['CAT', 'DOG', 'BAT', 'RAT', 'HAT', 'MAT', 'FROG', 'TOAD', 'PLAY', 'GAME'];
+// Fetch dictionary from external file
+async function loadDictionary() {
+    try {
+        const response = await fetch('words.txt');
+        const text = await response.text();
+        dictionary = text.split('\n').map(word => word.trim().toUpperCase()).filter(word => word.length > 0);
+        console.log(`Loaded ${dictionary.length} words into dictionary`);
+    } catch (error) {
+        console.error('Error loading dictionary:', error);
+        setMessage('Failed to load dictionary. Using fallback list.');
+        dictionary = ['CAT', 'DOG', 'BAT', 'RAT', 'HAT', 'MAT', 'FROG', 'TOAD', 'PLAY', 'GAME']; // Fallback
+    }
+}
 
 // Initialize board
 function initBoard() {
@@ -59,7 +71,8 @@ function dragStart(e) {
     e.dataTransfer.setData('text', e.target.textContent);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadDictionary(); // Load dictionary first
     initBoard();
     drawTiles(players[0]);
     drawTiles(players[1]);
@@ -140,7 +153,6 @@ function submitWord() {
         checkGameOver();
     } else {
         setMessage(`"${word}" is not a valid word!`);
-        // Revert move (optional: implement undo if desired)
     }
 }
 
@@ -152,7 +164,7 @@ function updateScores() {
 
 // Switch turns
 function switchTurn() {
-    currentPlayer = 1 - currentPlayer; // Toggle between 0 and 1
+    currentPlayer = 1 - currentPlayer;
     document.getElementById('turn').textContent = `Player ${currentPlayer + 1}'s Turn`;
     updateRack();
 }
