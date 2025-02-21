@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(15, 30px);
+    gap: 2px;
+    margin: 20px auto;
+    width: fit-content;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px;
+}
+
+#player-rack {
+    display: flex;
+    gap: 10px;
+    margin: 20px auto;
+    width: fit-content;
+}
+
+.tile {
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    border: 1px solid #000;
+    text-align: center;
+    line-height: 30px;
+    cursor: move;
+}
+
+#scores {
+    margin: 10px;
+}
+
+#turn, #message {
+    margin: 10px;
+    font-weight: bold;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+}
